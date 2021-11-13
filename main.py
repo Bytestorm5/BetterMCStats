@@ -20,6 +20,5 @@ class MyClient(discord.Client):
         print(y.name.lower() for y in message.author.roles)
         # if (msg == "!config" and message.author == )
 
-
 client = MyClient()
 client.run(TOKEN)
