@@ -15,17 +15,17 @@ def poll(guild):
     data.insert_one({'server':guild.id,'time': int(time.time()),'players':status.players.online})
 
 def getRange(guild_id, upper, lower):
-    return data.find({'server':guild_id,time: {'$gt':lower,'$lt':upper}})
-
-def getPoint(guild_id, timestamp):
-    results = data.find_one({'server':guild_id, 'time': timestamp})
+    results = data.find({'server':guild_id,time: {'$gt':lower,'$lt':upper}})
     output = []
     for result in results:
-        output.append({result.time:result.players})
+        output.append({result.time: result.players})
     return output
+
+def getPoint(guild_id, timestamp):
+    result = data.find_one({'server':guild_id, 'time': timestamp})
+    return {result.time: result.players}
 def getServer(guild_id):
-    result = servers.find_one({'id': guild_id})
-    return {result.time:result.players}
+    return servers.find_one({'id': guild_id})
 
 def addServer(guild):
     if data.find_one({'id':guild.id}) == None:
