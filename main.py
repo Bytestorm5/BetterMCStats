@@ -17,7 +17,8 @@ def createEmbed(guild, raw, days):
                     value="```\n%s```" % ("\n".join([y["name"] for y in raw["players"]["sample"]])), inline=False)
     embed.timestamp = datetime.datetime.now()
     embed.add_field(name="🕠", value='Last updated: <t:%s:f>' % int(time.time()), inline=False)
-    embed.set_image(url="attachment://%s" % createGraph(getRange(time.time(), time.time() - (86400 * days))))
+    graph_name = createGraph(getRange(guild.id, time.time(), time.time() - (86400 * days)))
+    embed.set_image(url="attachment://stats.png")
     # embed.set_thumbnail(url=raw["favicon"])
     return embed
 
