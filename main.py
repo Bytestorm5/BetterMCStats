@@ -11,14 +11,19 @@ class MyClient(discord.Client):
     async def on_message(self, message):
         msg = message.content
         if msg.startswith("!config"):
-            if len(msg.split(" ")) != 4:
+            params = msg.split(" ")
+            if len(params) != 4:
                 await message.channel.send("!config <server_ip> <server_port> <output_channel_id>")
-
             else:
-                print(message.guild.id)
+                addServer({"id": message.guild.id, "ip": params[1], "port": params[2], "channel_id": params[3], "message_id": ""})
+                await message.channel.send("Added server successfully.")
 
-        print(y.name.lower() for y in message.author.roles)
-        # if (msg == "!config" and message.author == )
+
+        if msg.startsith("!getServer"):
+            for guild in client.guilds:
+                await message.channel.send(getServer(guild.id))
+
+        # await client.http.delete_message(channel_id, server_id)
 
 client = MyClient()
 client.run(TOKEN)
