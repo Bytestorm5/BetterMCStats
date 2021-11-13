@@ -1,5 +1,5 @@
 import discord
-import mongo
+from mongo import *
 TOKEN = "OTA5MTM2OTAzMzQzODM3MjA0.YY_5uA.08zxzKNAu-mN98XesrU8pP_KwJk"
 
 class MyClient(discord.Client):
