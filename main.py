@@ -10,19 +10,24 @@ from graph import *
 TOKEN = "OTA5MTM2OTAzMzQzODM3MjA0.YY_5uA.08zxzKNAu-mN98XesrU8pP_KwJk"
 
 
-async def periodic():
-    while True:
-        for guild in client.guilds:
-            info = getServer(guild.id)
-            channel = client.get_channel(info["channel_id"])
+async def update_stats():
+    for guild in client.guilds:
+        info = getServer(guild.id)
+        if info:
+            channel = client.get_channel(int(info["channel_id"]))
             embed = discord.Embed(title=time.time())
             if (info["message_id"] == ""):
                 message = await channel.send("Test")
                 info["message_id"] = message.id
                 addServer(info)
             else:
-                message = await client.get_message(info["message_id"])
-            message.edit(embed=embed)
+                message = client.get_message(int(info["message_id"]))
+            await message.edit(embed=embed)
+
+
+async def periodic():
+    while True:
+        update_stats()
 
         await asyncio.sleep(60)
 
