@@ -22,12 +22,12 @@ async def update_stats():
                 addServer(info)
             else:
                 try:
-                    message = await channel.get_message(int(info["message_id"]))
+                    message = await channel.fetch_message(int(info["message_id"]))
                 except:
                     message = await channel.send("")
                     info["message_id"] = message.id
                     addServer(info)
-                    
+
             await message.edit(embed=embed)
 
 
