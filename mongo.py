@@ -4,35 +4,27 @@ import time
 
 client = MongoClient()
 db = client.get_database("BetterMCStats")
-col = db.get_collection("data")
+data = db.get_collection("data")
+servers = db.get_collection("servers")
 
-def poll():
-    server = MinecraftServer.lookup("njit.spea.cc")
+def poll(guild):
+    server = MinecraftServer.lookup(guild.ip + ':' + guild.port)
     # 'status' is supported by all Minecraft servers that are version 1.7 or higher.
     status = server.status()
     print("The server has {0} players and replied in {1} ms".format(status.players.online, status.latency))
-    col.insert_one({'time': int(time.time()),'players':status.players.online})
+    data.insert_one({'server':guild.id,'time': int(time.time()),'players':status.players.online})
 
-def getRange(upper, lower):
-    col.find({time: {'$gt'}})
-#output = {time, player count}
+def getRange(guild_id, upper, lower):
+    return data.find({'server':guild_id,time: {'$gt':lower,'$lt':upper}})
 
-#id should be Int64, brand should be String
-def increment(id, brand):
-    r = col.find_one({"id": id})
+def getPoint(guild_id, timestamp):
+    return data.find_one({'server':guild_id, 'time': timestamp})
 
-    if r == None:
-        col.insert_one({
-            "id": id,
-            brand : 1
-        })
-    elif col.find_one({"id": id, brand: {'$exists': True}}) == None:
-        col.find_one_and_update(
-            {"id": id},
-            {"$set": {brand: 1}}
-        )
+def getServer(guild_id):
+    return servers.find_one({'id': guild_id})
+
+def addServer(guild):
+    if data.find_one({'id':guild.id}) == None:
+        servers.add(guild)
     else:
-        col.find_one_and_update(
-            {"id": id},
-            {"$inc": {brand: 1}}
-        )
+        servers.find_one_and_replace({'id':guild.id}, guild)
