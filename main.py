@@ -14,13 +14,14 @@ async def periodic():
     while True:
         for guild in client.guilds:
             info = getServer(guild.id)
+            channel = client.get_channel(info["channel_id"])
             embed = discord.Embed(title=time.time())
             if (info["message_id"] == ""):
-                message = client.get_channel(info["channel_id"]).send("Test")
+                message = await channel.send("Test")
                 info["message_id"] = message.id
                 addServer(info)
             else:
-                message = client.get_message(info["message_id"])
+                message = await client.get_message(info["message_id"])
             message.edit(embed=embed)
 
         await asyncio.sleep(60)
