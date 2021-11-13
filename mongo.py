@@ -13,7 +13,8 @@ def formatSample(sample):
     print(sample)
     return sample
 
-def poll(guild):
+def poll(guild_id):
+    guild = getServer(guild_id)
     server = MinecraftServer.lookup(guild["ip"]) #+ ':' + guild["port"])
     # 'status' is supported by all Minecraft servers that are version 1.7 or higher.
     status = server.status()

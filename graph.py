@@ -30,7 +30,7 @@ def createGraph(playerData):
     plt.tick_params(axis='y',colors='red')
 
     plt.savefig('stats.png', transparent=True,orientation='portrait',pad_inches=0.1, edgecolor='g')
-
+    return 'stats.png'
     plt.show()
 
 #lol = {1:5, 2:6, 3:6, 4:2}
