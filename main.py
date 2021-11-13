@@ -1,16 +1,25 @@
 # Other things
 import discord
-import time
 import asyncio
 import datetime
 
 # Our things
-import graph
-import mongo
 from mongo import *
 from graph import *
 
 TOKEN = "OTA5MTM2OTAzMzQzODM3MjA0.YY_5uA.08zxzKNAu-mN98XesrU8pP_KwJk"
+
+
+def createEmbed(guild, raw, days):
+    embed = discord.Embed(title="%s Stats" % guild.name, description="MOTD:\n%s" % "TESTINGMOTD")
+    print("\n".join([y["name"] for y in raw["players"]["sample"]]))
+    embed.add_field(name="Players (%s / %s)" % (raw["players"]["online"], raw["players"]["max"]),
+                    value="```\n%s```" % ("\n".join([y["name"] for y in raw["players"]["sample"]])), inline=False)
+    embed.timestamp = datetime.datetime.now()
+    embed.add_field(name="🕠", value='Last updated: <t:%s:f>' % int(time.time()), inline=False)
+    embed.set_image(url="attachment://%s" % createGraph(getRange(time.time(), time.time() - (86400 * days))))
+    # embed.set_thumbnail(url=raw["favicon"])
+    return embed
 
 
 async def update_stats():
@@ -23,14 +32,7 @@ async def update_stats():
             # poll(guild.id)
             raw = poll(guild.id)
 
-            embed = discord.Embed(title="%s Stats" % guild.name, description="MOTD:\n%s" % "TESTINGMOTD")
-            print("\n".join([y["name"] for y in raw["players"]["sample"]]))
-            embed.add_field(name="Players (%s / %s)" % (raw["players"]["online"], raw["players"]["max"]), value="```\n%s```" % ("\n".join([y["name"] for y in raw["players"]["sample"]])), inline=False)
-            embed.timestamp = datetime.datetime.now()
-            embed.add_field(name="🕠",value='Last updated: <t:%s:f>' % int(time.time()), inline=False)
-            #embed.set_footer(text='<t:%s:F>' % int(time.time()))
-            embed.set_image(url="attachment://%s" % createGraph(getRange(time.time(), time.time()-86400)))
-            #embed.set_thumbnail(url=raw["favicon"])
+            embed = createEmbed(guild, raw, 1)
 
             if (info["message_id"] == ""):
                 message = await channel.send("Waiting for update...")
@@ -74,7 +76,7 @@ class MyClient(discord.Client):
         msg = message.content
         if msg.startswith("!config"):
             params = msg.split(" ")
-            if len(params) != 4:
+            if len(params) != 4 or type(params[2]) != "int" or type(params[3]) != "int":
                 await message.channel.send("!config <server_ip> <server_port> <output_channel_id>")
             else:
                 addServer({"id": message.guild.id, "ip": params[1], "port": params[2], "channel_id": params[3],
@@ -84,6 +86,14 @@ class MyClient(discord.Client):
         if msg.startswith("!getServer"):
             for guild in client.guilds:
                 await message.channel.send(getServer(guild.id))
+
+        if msg.startswith("!statsfrom"):
+            params = msg.split(" ")
+            if len(params) != 2 or type(params[1]) != "int":
+                await message.channel.send("!statsfrom <number_of_days_ago")
+            else:
+                await message.channel.send(embed=createEmbed(message.guild, poll(message.guild.id), params[1]))
+
 
         if msg.startswith("!updatenow"):
             await update_stats()
