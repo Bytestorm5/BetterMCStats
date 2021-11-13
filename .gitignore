@@ -13,3 +13,4 @@
 .idea/bettermcstats.iml
 .idea/misc.xml
 .idea/bettermcstats.iml
+*.pyc
