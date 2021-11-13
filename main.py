@@ -13,7 +13,16 @@ TOKEN = "OTA5MTM2OTAzMzQzODM3MjA0.YY_5uA.08zxzKNAu-mN98XesrU8pP_KwJk"
 async def periodic():
     while True:
         for guild in client.guilds:
-            print(poll(getServer(guild.id)))
+            info = getServer(guild.id)
+            embed = discord.Embed(title=time.time())
+            if (info["message_id"] == ""):
+                message = client.get_channel(info["channel_id"]).send("Test")
+                info["message_id"] = message.id
+                addServer(info)
+            else:
+                message = client.get_message(info["message_id"])
+            message.edit(embed=embed)
+
         await asyncio.sleep(60)
 
 
