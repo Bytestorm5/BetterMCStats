@@ -13,8 +13,8 @@ TOKEN = "OTA5MTM2OTAzMzQzODM3MjA0.YY_5uA.08zxzKNAu-mN98XesrU8pP_KwJk"
 async def periodic():
     while True:
         for guild in client.guilds:
-            print(getServer(guild.id))
-        await asyncio.sleep(1)
+            print(poll(getServer(guild.id)))
+        await asyncio.sleep(60)
 
 
 def stop():
