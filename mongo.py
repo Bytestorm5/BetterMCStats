@@ -18,10 +18,14 @@ def getRange(guild_id, upper, lower):
     return data.find({'server':guild_id,time: {'$gt':lower,'$lt':upper}})
 
 def getPoint(guild_id, timestamp):
-    return data.find_one({'server':guild_id, 'time': timestamp})
-
+    results = data.find_one({'server':guild_id, 'time': timestamp})
+    output = []
+    for result in results:
+        output.append({result.time:result.players})
+    return output
 def getServer(guild_id):
-    return servers.find_one({'id': guild_id})
+    result = servers.find_one({'id': guild_id})
+    return {result.time:result.players}
 
 def addServer(guild):
     if data.find_one({'id':guild.id}) == None:
