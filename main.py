@@ -17,18 +17,23 @@ async def update_stats():
             channel = client.get_channel(int(info["channel_id"]))
             embed = discord.Embed(title=time.time())
             if (info["message_id"] == ""):
-                message = await channel.send("Test")
+                message = await channel.send("")
                 info["message_id"] = message.id
                 addServer(info)
             else:
-                message = client.get_message(int(info["message_id"]))
+                try:
+                    message = await channel.get_message(int(info["message_id"]))
+                except:
+                    message = await channel.send("")
+                    info["message_id"] = message.id
+                    addServer(info)
+                    
             await message.edit(embed=embed)
 
 
 async def periodic():
     while True:
-        update_stats()
-
+        await update_stats()
         await asyncio.sleep(60)
 
 
@@ -64,12 +69,10 @@ class MyClient(discord.Client):
             for guild in client.guilds:
                 await message.channel.send(getServer(guild.id))
 
+        if msg.startswith("!updatenow"):
+            await update_stats()
+
         # await client.http.delete_message(channel_id, server_id)
-
-
-def update_stats():
-    for guild in client.guilds:
-        print(getServer(guild.id))
 
 
 client = MyClient()
