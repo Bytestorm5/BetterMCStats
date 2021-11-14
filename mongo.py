@@ -1,5 +1,6 @@
 import json
 
+import mcstatus
 from pymongo import MongoClient
 from mcstatus import MinecraftServer
 import time
@@ -11,7 +12,14 @@ servers = db.get_collection("servers")
 
 def formatSample(sample):
     print(sample)
-    return sample
+    output = []
+    for player in sample:
+        dict = {
+            "id": str(player.id),
+            "name": str(player.name)
+        }
+        output.append(dict)
+    return output
 
 def poll(guild_id):
     guild = getServer(guild_id)
