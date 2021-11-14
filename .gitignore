@@ -14,3 +14,8 @@
 .idea/misc.xml
 .idea/bettermcstats.iml
 *.pyc
+venv2/*
+.idea/bettermcstats.iml
+.idea/misc.xml
+.idea/workspace.xml
+.idea/workspace.xml
