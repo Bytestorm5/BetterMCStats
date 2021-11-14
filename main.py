@@ -94,11 +94,8 @@ class MyClient(discord.Client):
             else:
                 await message.channel.send(embed=createEmbed(message.guild, poll(message.guild.id), params[1]))
 
-
         if msg.startswith("!updatenow"):
             await update_stats()
-
-        # await client.http.delete_message(channel_id, server_id)
 
 
 client = MyClient()
