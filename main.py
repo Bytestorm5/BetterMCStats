@@ -42,7 +42,7 @@ async def update_stats():
             embed, f = createEmbed(guild, raw, 1)
             try:
                 message = await channel.fetch_message(int(info["message_id"]))
-                message.delete()
+                await message.delete()
             except:
                 print("New message")
 
