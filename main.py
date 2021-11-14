@@ -1,4 +1,6 @@
 #other things
+import time
+
 import discord
 import asyncio
 import datetime
@@ -10,7 +12,7 @@ from graph import *
 TOKEN = "OTA5MTM2OTAzMzQzODM3MjA0.YY_5uA.08zxzKNAu-mN98XesrU8pP_KwJk"
 
 
-def createEmbed(guild, raw, days):
+def createEmbed(guild, raw, image):
     embed = discord.Embed(title="%s Stats" % guild.name, description="MOTD:\n%s" % "TESTINGMOTD")
     if len(raw["players"]) == 2: #["sample"] is null
         print("-")
@@ -22,9 +24,9 @@ def createEmbed(guild, raw, days):
                     value="```\n%s```" % ("\n".join([y["name"] for y in raw["players"]["sample"]])), inline=False)
     embed.timestamp = datetime.datetime.now()
     embed.add_field(name="🕠", value='Last updated: <t:%s:f>' % int(time.time()), inline=False)
-    graph_name = createGraph(getRange(guild.id, time.time(), time.time() - (86400 * days)))
-    f = discord.File('stats.png')
-    embed.set_image(url='attachment://stats.png')
+    #graph_name = createLineGraph(getRange(guild.id, time.time(), time.time() - (86400 * days)))
+    f = discord.File(image)
+    embed.set_image(url='attachment://' + image)
     # embed.set_thumbnail(url=raw["favicon"])
     return embed, f
 
@@ -37,9 +39,9 @@ async def update_stats():
 
             # testing
             # poll(guild.id)
-            raw = poll(guild.id)
+            raw = poll(guild.id, True)
 
-            embed, f = createEmbed(guild, raw, 1)
+            embed, f = createEmbed(guild, raw, createLineGraph(getRange(guild.id, time.time(), time.time() - (86400 * 1))))
             try:
                 message = await channel.fetch_message(int(info["message_id"]))
                 await message.delete()
@@ -95,11 +97,13 @@ class MyClient(discord.Client):
         if msg.startswith("!statsfrom"):
             params = msg.split(" ")
             if len(params) != 2 or type(params[1]) != "int":
-                await message.channel.send("!statsfrom <number_of_days_ago")
+                await message.channel.send("!statsfrom <number_of_days_ago>")
             else:
-                e, f = createEmbed(message.guild, poll(message.guild.id), params[1])
+                e, f = createEmbed(message.guild, poll(message.guild.id, False), createLineGraph(getRange(message.guild.id, time.time(), time.time() - (86400 * float(params[1])))))
                 await message.channel.send(file=f, embed=e)
-
+        if msg.startswith("!hourly"):
+            e, f = createEmbed(message.guild, poll(message.guild.id, False), createBarGraph(getRange(message.guild.id, time.time(), 0)))
+            await message.channel.send(file=f, embed=e)
         if msg.startswith("!updatenow"):
             await update_stats()
 

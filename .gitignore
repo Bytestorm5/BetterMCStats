@@ -19,3 +19,4 @@ venv2/*
 .idea/misc.xml
 .idea/workspace.xml
 .idea/workspace.xml
+*.png
