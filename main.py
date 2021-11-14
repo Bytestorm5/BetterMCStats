@@ -24,7 +24,7 @@ def createEmbed(guild, raw, days):
     embed.add_field(name="🕠", value='Last updated: <t:%s:f>' % int(time.time()), inline=False)
     graph_name = createGraph(getRange(guild.id, time.time(), time.time() - (86400 * days)))
     f = discord.File('stats.png')
-    embed.set_image(url='stats.png')
+    embed.set_image(url='attachment://stats.png')
     # embed.set_thumbnail(url=raw["favicon"])
     return embed, f
 
@@ -40,21 +40,18 @@ async def update_stats():
             raw = poll(guild.id)
 
             embed, f = createEmbed(guild, raw, 1)
+            try:
+                message = await channel.fetch_message(int(info["message_id"]))
+                message.delete()
+            except:
+                print("New message")
 
-            if (info["message_id"] == ""):
-                message = await channel.send("Waiting for update...")
-                info["message_id"] = message.id
-                addServer(info)
-            else:
-                try:
-                    message = await channel.fetch_message(int(info["message_id"]))
-                except:
-                    message = await channel.send("Waiting for update...")
-                    info["message_id"] = message.id
-                    addServer(info)
+            message = await channel.send(file=f, embed=embed)
+            info["message_id"] = message.id
+            addServer(info)
 
-            await message.delete()
-            await channel.send(file=f, embed=embed)
+            # await message.delete()
+            # await channel.send(file=f, embed=embed)
 
 
 async def periodic():
