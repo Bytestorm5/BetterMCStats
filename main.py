@@ -9,7 +9,7 @@ import datetime
 from mongo import *
 from graph import *
 
-TOKEN = "OTA5MTM2OTAzMzQzODM3MjA0.YY_5uA.08zxzKNAu-mN98XesrU8pP_KwJk"
+TOKEN = 0
 
 
 def createEmbed(guild, raw, image):
