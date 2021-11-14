@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 
 
 #Player data --> dictionary {time:player amount}
+import numpy
+
+
 def createGraph(playerData):
     timeStamp = []
     playerCount = []
@@ -11,9 +14,9 @@ def createGraph(playerData):
         timeStamp.append(p[0])
         playerCount.append(len(p[1]))
 
-    # fig = plt.figure()
-    # fig.set_facecolor('black')
-    # fig.patch.set_alpha(0.1)
+    fig = plt.figure()
+    fig.set_facecolor('black')
+    fig.patch.set_alpha(0.1)
 
     ax = plt.axes()
     ax.spines['bottom'].set_color('#781919')
@@ -26,9 +29,9 @@ def createGraph(playerData):
     plt.style.use('seaborn-darkgrid')
     plt.ylabel('Player Count',color='maroon')
     plt.xlabel('Time',color='maroon')
-    plt.tick_params(axis='x',colors='#c41b1b')
-    plt.tick_params(axis='y',colors='#c41b1b')
-    plt.rcParams.update({'font.size':20})
+    plt.tick_params(axis='x',colors='#c41b1b',grid_alpha=0.25)
+    plt.tick_params(axis='y',colors='#c41b1b', grid_alpha=0.5)
+    #plt.rcParams.update({'font.size':10})
 
     plt.plot(timeStamp,playerCount,color='#bd6f11')
     plt.savefig('stats.png',orientation='portrait',pad_inches=0.1)

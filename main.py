@@ -1,4 +1,4 @@
-# Other things
+#other things
 import discord
 import asyncio
 import datetime
@@ -57,7 +57,7 @@ async def update_stats():
 async def periodic():
     while True:
         await update_stats()
-        await asyncio.sleep(5)
+        await asyncio.sleep(15)
 
 
 def stop():
