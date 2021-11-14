@@ -125,8 +125,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/main.py</url>
-          <line>18</line>
-          <option name="timeStamp" value="26" />
+          <line>13</line>
+          <option name="timeStamp" value="30" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -145,6 +145,9 @@
         <watch expression="status.raw" />
         <watch expression="'&lt;t:%s:F&gt;' % time.time()" language="Python" />
         <watch expression="results.count()" language="Python" />
+        <watch expression="&quot;\n&quot;.join([y[&quot;name&quot;] for y in raw[&quot;players&quot;][&quot;sample&quot;]])" language="Python" />
+        <watch expression="raw[&quot;players&quot;][&quot;sample&quot;]" language="Python" />
+        <watch expression="raw[&quot;players&quot;]" language="Python" />
       </configuration>
     </watches-manager>
   </component>

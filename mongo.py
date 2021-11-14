@@ -13,6 +13,9 @@ data = db.get_collection("data")
 servers = db.get_collection("servers")
 
 def formatSample(sample):
+    if sample == None:
+        print([])
+        return []
     print(sample)
     output = []
     for player in sample:

@@ -12,17 +12,21 @@ TOKEN = "OTA5MTM2OTAzMzQzODM3MjA0.YY_5uA.08zxzKNAu-mN98XesrU8pP_KwJk"
 
 def createEmbed(guild, raw, days):
     embed = discord.Embed(title="%s Stats" % guild.name, description="MOTD:\n%s" % "TESTINGMOTD")
-    print("\n".join([y["name"] for y in raw["players"]["sample"]]))
-    embed.add_field(name="Players (%s / %s)" % (raw["players"]["online"], raw["players"]["max"]),
+    if len(raw["players"]) == 2: #["sample"] is null
+        print("-")
+        embed.add_field(name="Players (%s / %s)" % (raw["players"]["online"], raw["players"]["max"]),
+                        value="```\n%s```" % "-", inline=False)
+    else:
+        print("\n".join([y["name"] for y in raw["players"]["sample"]]))
+        embed.add_field(name="Players (%s / %s)" % (raw["players"]["online"], raw["players"]["max"]),
                     value="```\n%s```" % ("\n".join([y["name"] for y in raw["players"]["sample"]])), inline=False)
     embed.timestamp = datetime.datetime.now()
     embed.add_field(name="🕠", value='Last updated: <t:%s:f>' % int(time.time()), inline=False)
     graph_name = createGraph(getRange(guild.id, time.time(), time.time() - (86400 * days)))
-    with open('stats.png', 'rb') as f:
-        picture = discord.File(f)
-        embed.set_image(url=picture.fp)
+    f = discord.File('stats.png')
+    embed.set_image(url='stats.png')
     # embed.set_thumbnail(url=raw["favicon"])
-        return embed,picture
+    return embed, f
 
 
 async def update_stats():
@@ -49,7 +53,8 @@ async def update_stats():
                     info["message_id"] = message.id
                     addServer(info)
 
-            await message.edit(content="", file=f, embed=embed)
+            await message.delete()
+            await channel.send(file=f, embed=embed)
 
 
 async def periodic():
