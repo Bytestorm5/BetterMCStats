@@ -18,9 +18,11 @@ def createEmbed(guild, raw, days):
     embed.timestamp = datetime.datetime.now()
     embed.add_field(name="🕠", value='Last updated: <t:%s:f>' % int(time.time()), inline=False)
     graph_name = createGraph(getRange(guild.id, time.time(), time.time() - (86400 * days)))
-    embed.set_image(url="attachment://stats.png")
+    with open('stats.png', 'rb') as f:
+        picture = discord.File(f)
+        embed.set_image(url=picture.fp)
     # embed.set_thumbnail(url=raw["favicon"])
-    return embed
+        return embed,picture
 
 
 async def update_stats():
@@ -33,7 +35,7 @@ async def update_stats():
             # poll(guild.id)
             raw = poll(guild.id)
 
-            embed = createEmbed(guild, raw, 1)
+            embed, f = createEmbed(guild, raw, 1)
 
             if (info["message_id"] == ""):
                 message = await channel.send("Waiting for update...")
@@ -47,7 +49,7 @@ async def update_stats():
                     info["message_id"] = message.id
                     addServer(info)
 
-            await message.edit(conent="", embed=embed)
+            await message.edit(content="", file=f, embed=embed)
 
 
 async def periodic():
@@ -93,7 +95,8 @@ class MyClient(discord.Client):
             if len(params) != 2 or type(params[1]) != "int":
                 await message.channel.send("!statsfrom <number_of_days_ago")
             else:
-                await message.channel.send(embed=createEmbed(message.guild, poll(message.guild.id), params[1]))
+                e, f = createEmbed(message.guild, poll(message.guild.id), params[1])
+                await message.channel.send(file=f, embed=e)
 
         if msg.startswith("!updatenow"):
             await update_stats()

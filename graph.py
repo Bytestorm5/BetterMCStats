@@ -7,13 +7,13 @@ import matplotlib.pyplot as plt
 def createGraph(playerData):
     timeStamp = []
     playerCount = []
-    for time in playerData:
-        timeStamp.append(time)
-        playerCount.append(playerData[time])
+    for p in playerData:
+        timeStamp.append(p[0])
+        playerCount.append(len(p[1]))
 
-    fig = plt.figure()
-    fig.set_facecolor('black')
-    fig.patch.set_alpha(0.1)
+    # fig = plt.figure()
+    # fig.set_facecolor('black')
+    # fig.patch.set_alpha(0.1)
 
     ax = plt.axes()
     ax.spines['bottom'].set_color('#781919')
